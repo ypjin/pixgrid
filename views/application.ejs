@@ -1,0 +1,35 @@
+<html>
+<head>
+  <title><% if(typeof title !== "undefined"){ %><%= title %><% }else{ %>Cocoafish<% } %></title>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">google.load("jquery", "1.7.1");</script>
+  <script type="text/javascript">
+    $(function(){
+      if($("#flash").length > 0){
+        setTimeout(function(){$("#flash").fadeOut()},3000);
+      }
+      $(window).resize(function(){
+        if($("#ctnr").hasClass("p10")){
+          $("#ctnr").css('width', parseInt($('body').width()) - 222);  
+        }else{
+          $("#ctnr").css('width', parseInt($('body').width()) - 202);
+        }
+      });
+      if($("#ctnr").hasClass("p10")){
+        $("#ctnr").css('width', parseInt($('body').width()) - 222);  
+      }else{
+        $("#ctnr").css('width', parseInt($('body').width()) - 202);
+      }
+    });
+  </script>
+</head>
+<body>
+  <% if(req.session.flash && req.session.flash.msg){ %>
+    <div id="flash"><%= req.session.flash.msg %></div>
+  <% } %>
+  <%- body %>
+  <div class="clr"></div>
+</body>
+</html>
