@@ -1,5 +1,205 @@
 <style type="text/css">
-  #login{width:450px;padding:25px;background:#f5f5f5;}
+  #preview{position:fixed;top:10%;left:50%;width:700px;height:336px;margin:0 0 0 -350px;}
+  #preview .ctnr{background:#fff;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;margin:8px 0 0 0;}
+  #preview .ctnr #pv{width:440px;height:240px;background:#484850;margin:18px;}
+  #preview .ctnr #pv #pv-img{display:block;margin:auto;}
+  #preview .ctnr #inputs{width:200px;margin:18px 18px 18px 0px;}
+  #preview .ctnr #inputs textarea{width:100%;height:180px;font:18px/24px 'Helvetica Neue',arial,sans-serif;padding:5px;margin:0;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;outline:none;border:1px solid #909090;}
+  #preview .ctnr #inputs input[type="text"]{width:100%;height:30px;font:18px/30px 'Helvetica Neue',arial,sans-serif;padding:5px;margin:0;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;outline:none;border:1px solid #909090;margin:5px 0 0 0;}
+  #preview .ctnr #inputs textarea:focus,#preview .ctnr #inputs input[type="text"]:focus{border:1px solid #1189fe;}
+  #preview .ctnr #btm{width:100%;border-top:1px solid #484850;}
+  #preview .ctnr #btm .fn,#preview .ctnr #btm .btn{margin:15px;}
+  #preview .ctnr #btm .fn{display:block;color:#858585;font:700 14px/40px "helvetica neue",arial,sans-serif;}
+  #preview .cls{width:50px;height:50px;text-indent:-9999px;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;margin:0 0 0 325px;background:url("/images/icons.png") -40px 0 no-repeat;}
 </style>
+<script type="text/javascript">
+$(function(){
+  $(".pht").click(function(){
+    $(this).attr('id','current');
+    var iurl = $(this).attr('data-url');
+    if($("#p-img img").length < 1){
+      $("#v #p-img").append("<img id='pimg' src='"+iurl+"' />");
+      $('#pimg').load(function(){
+        if($(this).height() < $("#v #p-img").height()) {
+          var h = ($("#v #p-img").height() - $(this).height())/2;
+          $(this).css('padding-top',h);
+        }
+      });
+      $("#v, #shdw").show();
+    }
+  });
+  $("#v .cls").click(function(){
+    $("#current").attr('id','');
+    $("#v #p-img img").remove();
+    $("#v, #shdw").hide();
+  });
+  $("#v #next").click(function(){
+    var next = $("#current").nextAll(".pht");
+    console.log(next.length);
+    if(next.length === 0){
+      next = $(".pht").first()
+    }
+    var iurl = next.attr('data-url');
+    if($("#p-img img").length > 0){
+      $("#pimg").attr('src',iurl);
+      $('#pimg').load(function(){
+        if($(this).height() < $("#v #p-img").height()) {
+          var h = ($("#v #p-img").height() - $(this).height())/2;
+          $(this).css('padding-top',h);
+        }
+        $("#current").attr('id','');
+        next.attr('id','current');
+      });
+      $("#v, #shdw").show();
+    }
+  });
+  $("#v #prev").click(function(){
+    var prev = $("#current").prev();
+    console.log(prev.length);
+    if(prev.length === 0){
+      prev = $(".pht").last();
+    }
+    var iurl = prev.attr('data-url');
+    if($("#p-img img").length > 0){
+      $("#pimg").attr('src',iurl);
+      $('#pimg').load(function(){
+        if($(this).height() < $("#v #p-img").height()) {
+          var h = ($("#v #p-img").height() - $(this).height())/2;
+          $(this).css('padding-top',h);
+        }
+        $("#current").attr('id','');
+        prev.attr('id','current');
+      });
+      $("#v, #shdw").show();
+    }
+  });
+});
+</script>
+<script type="text/javascript">
+  function dragEnter(event) {
+    // console.log('dragEnter', event);
+    event.stopPropagation();
+    event.preventDefault();
+  }
 
-<h1>you are logged in.</h1>
+  function dragExit(event) {
+    // console.log('dragExit', event);
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  function dragOver(event) {
+    // console.log('dragOver', event);
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  function drop(event) {
+    
+    // console.log('drop', event);
+    event.stopPropagation();
+    event.preventDefault();
+    
+    var data = event.dataTransfer;
+    var files = data.files;
+    var file;
+    var reader;
+    
+    for(var i = 0; i < files.length; i++) {
+      file = files[i];
+      console.log(file, file.fileName);
+      reader = new FileReader();
+      reader.onloadend = onFileLoaded;
+      reader.readAsDataURL(file);
+      break;
+    }
+  }
+
+  function onFileLoaded(event) {
+    console.log('onFileLoaded', event);
+
+    var pimg = document.getElementById("pv-img");
+    pimg.src = event.currentTarget.result;
+    jQuery("#pv-img").load(function(){
+      if(jQuery(this).height() > $("#pv").height()) {
+        $(this).css({"height":$("#pv").height()});
+      }else{
+        var h = ($("#pv").height() - $(this).height())/2;
+        $(this).css('padding-top',h);
+      }
+    });
+  }
+  $(function(){
+    var dropArea = $("body").get(0);
+    dropArea.addEventListener("dragenter", dragEnter, false);
+    dropArea.addEventListener("dragexit", dragExit, false);
+    dropArea.addEventListener("dragover", dragOver, false);
+    dropArea.addEventListener("drop", drop, false);
+
+    $("#fi").change(function (){
+      var fileName = $(this).val();
+      $(".filename").html(fileName);
+    });
+  });
+</script>
+<div id="dropArea">
+  <h3>+ Drag and Drop photos here, to add <span style="color:#1189fe;margin:10px;">or</span> <span id="select-p" class="b-btn">Choose photos to upload</span></h3>
+</div>
+<div class="sb first">
+  <div id="albm-ctnr">
+    <div class="albm"><div class="cp"></div></div>
+    <div class="albm"><div class="cp"></div></div>
+    <div class="albm"><div class="cp"></div></div>
+    <div class="albm"><div class="cp"></div></div>
+    <div class="albm"><div class="cp"></div></div>
+    <div class="albm"><div class="cp"></div></div>
+    <div class="clr"></div>
+  </div>
+</div>
+<div class="sb last">
+  <h2>All Photos <span class="cts">(<%= obj.meta.total_results %> photos)</span></h2>
+  <% var o = obj["photos"] %>
+  <div id="p-ctnr">
+    <% if(o.length > 0) { %>
+      <% for(var i=0;i<o.length;i++){ %>
+        <% for (var j in o[i].urls) { %>
+          <div class="pht" data-url="<%= o[i].urls.medium_500 %>" data-id="<%= o[i].id %>"><img src="<%= o[i].urls.medium_500 %>" alt="<%= o[i].id %>" height="210" width="210" data-id="<%= o[i].id %>"/></div>
+        <%
+          break;
+        } %>
+      <% } %>
+    <% }else{ %>
+      No results found.
+    <% } %>
+    <div class="clr"></div>
+  </div>
+</div>
+<div id="v">
+  <div id="p-nav">
+    <div id="prev" unselectable="on">prev</div>
+    <div class="cls" unselectable="on">x</div>
+    <div id="next" unselectable="on">next</div>
+  </div>
+  <div id="p-img"></div>
+  <div id="trash" unselectable="on">trash</div>
+</div>
+<div id="shdw"></div>
+
+<div id="preview">
+  <div class="cls" unselectable="on">x</div>
+  <div class="ctnr">
+    <div id="pv" class="fl">
+      <img src="" id="pv-img" />
+    </div>
+    <div id="inputs" class="fl">
+      <textarea name="description" placeholder="Description" rows="4"></textarea>
+      <input type="text" name="tags" placeholder="Tags" />
+    </div>
+    <div class="clr"></div>
+    <div id="btm">
+      <span class="fn fl">filename (size)</span>
+      <span class="btn fr">Proceed</span>
+      <div class="clr"></div>
+    </div>
+  </div>
+</div>
