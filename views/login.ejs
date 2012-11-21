@@ -1,5 +1,6 @@
 <script type="text/javascript">
 $(function(){
+  $("input[name='un']").focus();
   $("#l-s").click(function(){
     $("#su-sec").hide();
     $("#l-sec").fadeIn();
@@ -8,6 +9,10 @@ $(function(){
     $("#l-sec").hide();
     $("#su-sec").fadeIn();
   });
+  <% if(req.session.signup === true || req.session.controller === "signup"){ %>
+    $("#l-sec").hide();
+    $("#su-sec").show();
+  <% } %>
 });
 </script>
 <style type="text/css">
@@ -40,9 +45,9 @@ $(function(){
   <div class="sb">
     <div id="signup">
       <form name="signup" action="/signup" method="post">
-        <input type="text" name="un" placeholder="Email" />
-        <input type="text" name="f_name" placeholder="First Name" />
-        <input type="text" name="l_name" placeholder="Last Name" />
+        <input type="text" name="email" placeholder="Email" />
+        <input type="text" name="first_name" placeholder="First Name" />
+        <input type="text" name="last_name" placeholder="Last Name" />
         <input type="password" name="pw" placeholder="Password" />
         <input type="password" name="pw_c" placeholder="Password Confirmation" />
         <input type="submit" value="Sign Up" class="b-btn m-a">

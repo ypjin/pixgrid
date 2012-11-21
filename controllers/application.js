@@ -2,7 +2,7 @@ var ACS = require('acs').ACS,
     logger = require('acs').logger
 
 function index(req, res) {
-  req.session.controller = "";
+  req.session.controller = "index";
   if(!req.session.user) {
     res.render('login', {
       layout: 'application',
@@ -31,7 +31,24 @@ function index(req, res) {
 }
 
 function login(req, res) {
+  req.session.signup = false;
   req.session.controller = "login";
+  if(!req.session.user) {
+    res.render('login', {
+      layout: 'application',
+      req: req
+    });
+  }else{
+    res.render('index', {
+      layout: 'application',
+      req: req
+    });
+  }
+}
+
+function signup(req, res) {
+  req.session.signup = false;
+  req.session.controller = "signup";
   if(!req.session.user) {
     res.render('login', {
       layout: 'application',

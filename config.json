@@ -17,6 +17,7 @@
     { "path": "/photos", "method": "get", "callback": "photos#_index" },
     { "path": "/photos/new", "method": "get", "callback": "photos#_new" },
     { "path": "/photos/create", "method": "post", "callback": "photos#_create" },
+    { "path": "/photos/create.json", "method": "post", "callback": "photos#_create_json" },
     { "path": "/photos/:id", "method": "get", "callback": "photos#_show" },
     { "path": "/photos/:id/edit", "method": "get", "callback": "photos#_edit" },
     { "path": "/photos/:id/update", "method": "post", "callback": "photos#_update" },

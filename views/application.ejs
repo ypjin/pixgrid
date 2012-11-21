@@ -34,12 +34,12 @@
             <% if(req.session.user.photo){ %>
               <img src="<%= req.session.user.photo.urls.thumb_100 %>" alt="<%= req.session.user.name %>" height="20px">
             <% }else{ %>
-              <img src="/images/random.png" alt="<%= req.session.user.name %>" height="20px">
+              <img src="/images/user.png" alt="<%= req.session.user.name %>" height="20px">
             <% } %>
-            <%= req.session.user.name %>
+            <span style="display:inline-block;margin:0 0 0 9px;"><%= req.session.user.name %></span>
             <div id="ud">
-              <span><%= req.session.user.email %></span>
-              <a href="/signout">Sign Out</a>
+              <!-- <span><%= req.session.user.email %></span> -->
+              <a href="/signout" id="signout">Sign Out</a>
             </div>
           </div>
         </div>
@@ -61,7 +61,6 @@
         setTimeout(function(){$("#flash").fadeOut()},3000);
       }
       <% if(req && req.params.flash ){ %>$("input[name='un']").focus();<% } %>
-
     });
   </script>
   <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

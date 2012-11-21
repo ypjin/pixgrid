@@ -6,8 +6,8 @@ function signup(req, res) {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     email: req.body.email,
-    password: req.body.password,
-    password_confirmation: req.body.password_confirmation
+    password: req.body.pw,
+    password_confirmation: req.body.pw_c
   };
   
   ACS.Users.create(data, function(data) {
@@ -23,7 +23,8 @@ function signup(req, res) {
       logger.info('Created user: ' + user.name);
     } else {
       req.session.flash = {msg:data.message, r:0};
-      res.render('signup', {
+      req.session.signup = true;
+      res.render('login', {
         layout: 'application',
         req: req
       });

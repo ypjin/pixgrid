@@ -1,5 +1,6 @@
 var ACS = require('acs').ACS,
-    logger = require('acs').logger;
+    logger = require('acs').logger,
+    fs = require('fs');
 
 function _index(req, res) {
   req.session.check(req, res, function(){
@@ -79,6 +80,36 @@ function _create(req, res) {
   });
 }
 
+function _create_json(req, res) {
+  req.session.check(req, res, function(){
+    req.session.controller = "photos";
+    var data = {};
+    fs.readFile(req.files.photo.path, 'utf8', function (err, data) {
+      require("fs").writeFile("tmp_base64", data, function(err) {
+      });
+      var base64Data = data.replace(/^data:image\/png;base64,/,"");
+      var dataBuffer = new Buffer(base64Data, 'base64');
+      require("fs").writeFile(req.files.photo.path, dataBuffer, function(err) {
+        data = {
+          // photo: req.files.photo,
+          collection_id: req.body.collection_id,
+          tags: req.body.tags
+        };
+        ACS.Photos.create(data, function(e) {
+          if(e.success && e.success === true){
+            logger.info('photos#create.json: ' + JSON.stringify(e));
+            res.send(e);
+          }else{
+            logger.debug('photos#create.json#Error: ' + JSON.stringify(e));
+            req.session.flash = {msg:e.message, r:0};
+            res.send(e);
+          }
+        }, req, res);
+      });
+    });
+  });
+}
+
 function _edit(req, res) {
   req.session.check(req, res, function(){
     req.session.controller = "photos";
@@ -142,12 +173,10 @@ function _destroy(req, res) {
     ACS.Photos.remove(data, function(e) {
       if(e.success && e.success === true){
         logger.info('photos#destroy: ' + JSON.stringify(e));
-        req.session.flash = {msg:"Successfully delete a photo #"+req.params.id, r:0};
-        res.redirect('/photos');
+        res.send(e);
       }else{
         logger.debug('Error: ' + JSON.stringify(e));
-        req.session.flash = {msg:e.message, r:0};
-        res.redirect('/photos');
+        res.send(e);
       }
     }, req, res);
   });
