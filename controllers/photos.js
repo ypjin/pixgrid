@@ -91,7 +91,7 @@ function _create_json(req, res) {
       var dataBuffer = new Buffer(base64Data, 'base64');
       require("fs").writeFile(req.files.photo.path, dataBuffer, function(err) {
         data = {
-          // photo: req.files.photo,
+          photo: req.files.photo,
           collection_id: req.body.collection_id,
           tags: req.body.tags
         };

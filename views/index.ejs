@@ -1,23 +1,3 @@
-<style type="text/css">
-  #preview{display:none;position:fixed;top:10%;left:50%;width:700px;height:336px;margin:0 0 0 -350px;z-index:31;}
-  #preview .ctnr{background:#fff;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;margin:8px 0 0 0;}
-  #preview .ctnr #pv{width:440px;height:240px;background:#484850;margin:18px;}
-  #preview .ctnr #pv #pv-img{display:block;margin:auto;}
-  #preview .ctnr #inputs{width:200px;margin:18px 18px 18px 0px;}
-  #preview .ctnr #inputs textarea{width:100%;height:180px;font:18px/24px 'Helvetica Neue',arial,sans-serif;padding:5px;margin:0;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;outline:none;border:1px solid #909090;}
-  #preview .ctnr #inputs input[type="text"]{width:100%;height:30px;font:18px/30px 'Helvetica Neue',arial,sans-serif;padding:5px;margin:0;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;outline:none;border:1px solid #909090;margin:5px 0 0 0;}
-  #preview .ctnr #inputs textarea:focus,#preview .ctnr #inputs input[type="text"]:focus{border:1px solid #1189fe;}
-  #preview .ctnr #btm{width:100%;border-top:1px solid #484850;}
-  #preview .ctnr #btm .fn,#preview .ctnr #btm .btn{margin:15px;}
-  #preview .ctnr #btm .fn{display:block;color:#858585;font:700 14px/40px "helvetica neue",arial,sans-serif;}
-  #preview .cls{width:50px;height:50px;text-indent:-9999px;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;margin:0 0 0 325px;background:url("/images/icons.png") -40px 0 no-repeat;}
-  #success,#uploading{margin:15px;}
-  #success span,#uploading span{float:left;display:block;font:14px/42px "helvetica neue",arial,sans-serif;}
-  #uploading .img{display:inline-block;width:30px;height:30px;background:url("/images/icons.png") -190px 0 no-repeat;margin:5px 0 0 5px;}
-  #success .img{display:inline-block;width:30px;height:30px;background:url("/images/icons.png") -221px 0 no-repeat;margin:5px 0 0 5px;}
-  .blue{color:#1189fe;}
-  .green{color:#0ea20e;}
-</style>
 <script type="text/javascript">
 var pixGrid = {
   data: {}
@@ -114,13 +94,11 @@ $(function(){
     
     var data = event.dataTransfer;
     var files = data.files;
-    var file;
     var reader;
     
     for(var i = 0; i < files.length; i++) {
       jQuery("#preview, #shdw").show();
       pixGrid.data.file = files[i];
-      console.log(pixGrid.data.file, pixGrid.data.file.name);
       reader = new FileReader();
       reader.onloadend = onFileLoaded;
       reader.readAsDataURL(pixGrid.data.file);
@@ -166,9 +144,9 @@ $(function(){
 
       //Post with the correct MIME type (If the OS can identify one)
       if ( pixGrid.data.file.type === '' ){
-          filetype = 'application/octet-stream';
-      } else {
-          filetype = pixGrid.data.file.type;
+        filetype = 'application/octet-stream';
+      }else{
+        filetype = pixGrid.data.file.type;
       }
 
       //Build a HTTP request to post the file
@@ -181,10 +159,21 @@ $(function(){
       xmlHttpRequest.onreadystatechange = function(){ 
         if(xmlHttpRequest.readyState === 4){
           if(xmlHttpRequest.status === 200){
-            console.log("Received:"  + xmlHttpRequest.responseText);
             $("#uploading").replaceWith("<div id='success' class='fr'><span class='green'>Success</span><div class='img'></div></div>");
+            var result = JSON.parse(xmlHttpRequest.responseText);
+            if($(".pht").length > 0){
+              $(".pht").first().before('<div class="pht" data-id="'+result.photos[0].id+'"><span>Uploading photo. Please refresh the page to view the photo.</span></div>');
+            }else{
+              $("#dropArea").after('<div class="sb last"><h2>All Photos <span class="cts">(1 photos)</span></h2><div id="p-ctnr"><div class="pht" data-id="'+result.photos[0].id+'"><span>Uploading photo. Please refresh the page to view the photo.</span></div><div class="clr"></div></div></div>');
+            }
+            setTimeout(function(){$("#flash").fadeOut()},3000);
           }else{
-            console.log("Error code " + xmlHttpRequest.status);
+            if($("#flash").length > 0){
+              $("#flash").text("Fail to upload the photo.");
+            }else{
+              $("body").append("<div id='flash'>Fail to upload the photo.</div>")
+            }
+            setTimeout(function(){$("#flash").fadeOut()},3000);
           }
         }
       }; 
@@ -218,24 +207,46 @@ $(function(){
         }
       });
     });
+
+    $("#select-p").click(function(){
+      $("#photo-file").click();
+    });
+
+    $('#photo-file').change(function(e){
+      e.stopPropagation();
+      e.preventDefault();
+      
+      var files = e.target.files;
+      var reader;
+      
+      for(var i = 0; i < files.length; i++) {
+        jQuery("#preview, #shdw").show();
+        pixGrid.data.file = files[i];
+        reader = new FileReader();
+        reader.onloadend = onFileLoaded;
+        reader.readAsDataURL(pixGrid.data.file);
+        break;
+      }
+    });
   });
 </script>
 <div id="dropArea">
   <h3>+ Drag and Drop photos anywhere, to add <span style="color:#1189fe;margin:10px;">or</span> <span id="select-p" class="b-btn">Choose photos to upload</span></h3>
+  <input type="file" name="image" id="photo-file" />
 </div>
-<div class="sb first">
+<!-- <div class="sb first">
   <div id="albm-ctnr">
     <div class="albm"><div class="cp"></div></div>
     <div class="albm"><div class="cp"></div></div>
     <div class="albm"><div class="cp"></div></div>
     <div class="clr"></div>
   </div>
-</div>
-<div class="sb last">
-  <h2>All Photos <span class="cts">(<%= obj.meta.total_results %> photos)</span></h2>
-  <% var o = obj["photos"] %>
-  <div id="p-ctnr">
-    <% if(o.length > 0) { %>
+</div> -->
+<% var o = obj["photos"] %>
+<% if(o.length > 0) { %>
+  <div class="sb last">
+    <h2>All Photos <span class="cts">(<%= obj.meta.total_results %> photos)</span></h2>
+    <div id="p-ctnr">
       <% for(var i=0;i<o.length;i++){ %>
         <% for (var j in o[i].urls) { %>
           <div class="pht" data-url="<%= o[i].urls.medium_500 %>" data-id="<%= o[i].id %>"><img src="<%= o[i].urls.medium_500 %>" alt="<%= o[i].id %>" height="210" width="210" data-id="<%= o[i].id %>"/></div>
@@ -243,12 +254,10 @@ $(function(){
           break;
         } %>
       <% } %>
-    <% }else{ %>
-      No results found.
-    <% } %>
-    <div class="clr"></div>
+      <div class="clr"></div>
+    </div>
   </div>
-</div>
+<% } %>
 <div id="v">
   <div id="p-nav">
     <div id="prev" unselectable="on">prev</div>
