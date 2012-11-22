@@ -87,7 +87,7 @@ function _create_json(req, res) {
     fs.readFile(req.files.photo.path, 'utf8', function (err, data) {
       require("fs").writeFile("tmp_base64", data, function(err) {
       });
-      var base64Data = data.replace(/^data:image\/png;base64,/,"");
+      var base64Data = data.replace(/^data:image\/png;base64,/,"").replace(/^data:image\/jpeg;base64,/,"").replace(/^data:image\/jpg;base64,/,"").replace(/^data:image\/gif;base64,/,"");
       var dataBuffer = new Buffer(base64Data, 'base64');
       require("fs").writeFile(req.files.photo.path, dataBuffer, function(err) {
         data = {

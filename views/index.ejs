@@ -159,22 +159,39 @@ $(function(){
       xmlHttpRequest.onreadystatechange = function(){ 
         if(xmlHttpRequest.readyState === 4){
           if(xmlHttpRequest.status === 200){
-            $("#uploading").replaceWith("<div id='success' class='fr'><span class='green'>Success</span><div class='img'></div></div>");
             var result = JSON.parse(xmlHttpRequest.responseText);
-            if($(".pht").length > 0){
-              $(".pht").first().before('<div class="pht" data-id="'+result.photos[0].id+'"><span>Uploading photo. Please refresh the page to view the photo.</span></div>');
+            if(result.meta && result.meta.code === 200){
+              $("#uploading").replaceWith("<div id='success' class='fr'><span class='green'>Success</span><div class='img'></div></div>");
+              if($(".pht").length > 0){
+                $(".pht").first().before('<div class="pht" data-id="'+result.photos[0].id+'"><span>Uploading photo. Please refresh the page to view the photo.</span></div>');
+              }else{
+                $("#dropArea").after('<div class="sb last"><h2>All Photos <span class="cts">(1 photos)</span></h2><div id="p-ctnr"><div class="pht" data-id="'+result.photos[0].id+'"><span>Uploading photo. Please refresh the page to view the photo.</span></div><div class="clr"></div></div></div>');
+              }
+              if($("#flash").length > 0){
+                $("#flash").show().text("Successfully uploaded the photo.");
+              }else{
+                $("body").append("<div id='flash'>Successfully uploaded the photo.</div>")
+              }
+              setTimeout(function(){$("#preview, #shdw").fadeOut('slow')},1000);
+              setTimeout(function(){$("#flash").fadeOut()},3000);
             }else{
-              $("#dropArea").after('<div class="sb last"><h2>All Photos <span class="cts">(1 photos)</span></h2><div id="p-ctnr"><div class="pht" data-id="'+result.photos[0].id+'"><span>Uploading photo. Please refresh the page to view the photo.</span></div><div class="clr"></div></div></div>');
+              console.log(JSON.stringify(result.message));
+              if($("#flash").length > 0){
+                $("#flash").show().text(result.message);
+              }else{
+                $("body").append("<div id='flash'>"+result.message+"</div>")
+              }
+              setTimeout(function(){$("#flash").fadeOut()},3000);  
             }
-            setTimeout(function(){$("#flash").fadeOut()},3000);
           }else{
             if($("#flash").length > 0){
-              $("#flash").text("Fail to upload the photo.");
+              $("#flash").show().text("Fail to upload the photo.");
             }else{
               $("body").append("<div id='flash'>Fail to upload the photo.</div>")
             }
             setTimeout(function(){$("#flash").fadeOut()},3000);
           }
+          $("#uploading").replaceWith('<span id="proceed" class="btn">Proceed</span>');
         }
       }; 
       //Send the binary data
@@ -191,7 +208,7 @@ $(function(){
           $("#current").remove();
           $("#v, #shdw").hide();
           if($("#flash").length > 0){
-            $("#flash").text("Successfully deleted.");
+            $("#flash").show().text("Successfully deleted.");
           }else{
             $("body").append("<div id='flash'>Successfully deleted.</div>")
           }
@@ -199,7 +216,7 @@ $(function(){
         },
         error: function(xml, status, error){
           if($("#flash").length > 0){
-            $("#flash").text("Fail to delete the photo.");
+            $("#flash").show().text("Fail to delete the photo.");
           }else{
             $("body").append("<div id='flash'>Fail to delete the photo.</div>")
           }
