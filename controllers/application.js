@@ -31,7 +31,6 @@ function index(req, res) {
 }
 
 function login(req, res) {
-  req.session.signup = false;
   req.session.controller = "login";
   if(!req.session.user) {
     res.render('login', {
@@ -47,7 +46,6 @@ function login(req, res) {
 }
 
 function signup(req, res) {
-  req.session.signup = false;
   req.session.controller = "signup";
   if(!req.session.user) {
     res.render('login', {

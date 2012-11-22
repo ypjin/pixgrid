@@ -9,7 +9,7 @@ $(function(){
     $("#l-sec").hide();
     $("#su-sec").fadeIn();
   });
-  <% if(req.session.signup === true || req.session.controller === "signup"){ %>
+  <% if(req.session.controller === "signup"){ %>
     $("#l-sec").hide();
     $("#su-sec").show();
   <% } %>
