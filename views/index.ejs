@@ -168,10 +168,10 @@ $(function(){
             if(result.meta && result.meta.code === 200){
               $("#uploading").replaceWith("<div id='success' class='fr'><span class='green'>Success</span><div class='img'></div></div>");
               if($(".pht").length > 0){
-                $(".pht").first().before('<div class="pht" data-id="'+result.photos[0].id+'"><span>Uploading photo. Please refresh the page to view the photo.</span></div>');
+                $(".pht").first().before('<div class="pht" data-id="'+result.photos[0].id+'"><span>Uploading the photo. Please refresh the page to view the photo.</span></div>');
                 $("#p-count").text( parseInt($("#p-count").text()) + 1 );
               }else{
-                $("#dropArea").after('<div class="sb last"><h2>All Photos <span class="cts">(<span id="p-count">1</span> photos)</span></h2><div id="p-ctnr"><div class="pht" data-id="'+result.photos[0].id+'"><span>Uploading photo. Please refresh the page to view the photo.</span></div><div class="clr"></div></div></div>');
+                $("#dropArea").after('<div class="sb last"><h2>All Photos <span class="cts">(<span id="p-count">1</span> photos)</span></h2><div id="p-ctnr"><div class="pht" data-id="'+result.photos[0].id+'"><span>Uploading the photo. Please refresh the page to view the photo.</span></div><div class="clr"></div></div></div>');
               }
               if($("#flash").length > 0){
                 $("#flash").show().text("Successfully uploaded the photo.");

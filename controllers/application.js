@@ -53,9 +53,6 @@ function signup(req, res) {
       req: req
     });
   }else{
-    res.render('index', {
-      layout: 'application',
-      req: req
-    });
+    res.redirect('/');
   }
 }
