@@ -165,15 +165,20 @@ $(function(){
               $("#uploading").replaceWith("<div id='success' class='fr'><span class='green'>Success</span><div class='img'></div></div>");
               if($(".pht").length > 0){
                 $(".pht").first().before('<div class="pht" data-id="'+result.photos[0].id+'"><span>Uploading photo. Please refresh the page to view the photo.</span></div>');
+                $("#p-count").text( parseInt($("#p-count").text()) + 1 );
               }else{
-                $("#dropArea").after('<div class="sb last"><h2>All Photos <span class="cts">(1 photos)</span></h2><div id="p-ctnr"><div class="pht" data-id="'+result.photos[0].id+'"><span>Uploading photo. Please refresh the page to view the photo.</span></div><div class="clr"></div></div></div>');
+                $("#dropArea").after('<div class="sb last"><h2>All Photos <span class="cts">(<span id="p-count">1</span> photos)</span></h2><div id="p-ctnr"><div class="pht" data-id="'+result.photos[0].id+'"><span>Uploading photo. Please refresh the page to view the photo.</span></div><div class="clr"></div></div></div>');
               }
               if($("#flash").length > 0){
                 $("#flash").show().text("Successfully uploaded the photo.");
               }else{
                 $("body").append("<div id='flash'>Successfully uploaded the photo.</div>")
               }
-              setTimeout(function(){$("#preview, #shdw").fadeOut('slow')},1000);
+              setTimeout(function(){
+                $("#preview, #shdw").fadeOut('slow');
+                $("#success").replaceWith('<span id="proceed" class="btn">Proceed</span>');
+                $("#proceed").click(proceed);
+              },1000);
               setTimeout(function(){$("#flash").fadeOut()},3000);
             }else{
               if($("#flash").length > 0){
@@ -181,7 +186,7 @@ $(function(){
               }else{
                 $("body").append("<div id='flash'>"+result.message+"</div>")
               }
-              setTimeout(function(){$("#flash").fadeOut()},3000);  
+              setTimeout(function(){$("#flash").fadeOut()},3000);
             }
           }else{
             if($("#flash").length > 0){
@@ -213,6 +218,8 @@ $(function(){
           }else{
             $("body").append("<div id='flash'>Successfully deleted.</div>")
           }
+          $("#p-count").text( parseInt($("#p-count").text()) - 1 );
+          $("#v #p-img img").remove();
           setTimeout(function(){$("#flash").fadeOut()},3000);
         },
         error: function(xml, status, error){
@@ -263,7 +270,7 @@ $(function(){
 <% var o = obj["photos"] %>
 <% if(o.length > 0) { %>
   <div class="sb last">
-    <h2>All Photos <span class="cts">(<%= obj.meta.total_results %> photos)</span></h2>
+    <h2>All Photos <span class="cts">(<span id="p-count"><%= obj.meta.total_results %></span> photos)</span></h2>
     <div id="p-ctnr">
       <% for(var i=0;i<o.length;i++){ %>
         <% for (var j in o[i].urls) { %>

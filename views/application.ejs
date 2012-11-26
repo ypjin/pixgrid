@@ -36,7 +36,7 @@
             <% }else{ %>
               <img src="/images/user.png" alt="<%= req.session.user.name %>" height="20px">
             <% } %>
-            <span style="display:inline-block;margin:0 0 0 9px;"><%= req.session.user.name %></span>
+            <span style="display:inline-block;margin:0 0 0 9px;"><%=: req.session.user.name | truncate:12 %></span>
             <div id="ud">
               <!-- <span><%= req.session.user.email %></span> -->
               <a href="/signout" id="signout">Sign Out</a>
