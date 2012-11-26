@@ -23,7 +23,7 @@ function signup(req, res) {
       logger.info('Created user: ' + user.name);
     } else {
       req.session.flash = {msg:data.message, r:0};
-      req.session.signup = true;
+      req.session.controller = "signup"
       res.render('login', {
         layout: 'application',
         req: req
