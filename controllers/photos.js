@@ -62,19 +62,17 @@ function _create(req, res) {
   req.session.check(req, res, function(){
     req.session.controller = "photos";
     var data = {
-      photo: req.files.photo,
-      collection_id: req.body.collection_id,
-      tags: req.body.tags
+      photo: req.files.photo
     };
     ACS.Photos.create(data, function(e) {
       if(e.success && e.success === true){
         logger.info('photos#create: ' + JSON.stringify(e));
         req.session.flash = {msg:"Successfully create a photo #"+e.photos[0].id, r:0};
-        res.redirect('/photos');
+        res.redirect('/');
       }else{
         logger.debug('Error: ' + JSON.stringify(e));
         req.session.flash = {msg:e.message, r:0};
-        res.redirect('/photos/new');
+        res.redirect('/');
       }
     }, req, res);
   });

@@ -87,25 +87,28 @@ $(function(){
 
   function drop(event) {
     // console.log('drop', event);
-    event.stopPropagation();
-    event.preventDefault();
-    
-    var data = event.dataTransfer;
-    var files = data.files;
-    var reader;
-    
-    for(var i = 0; i < files.length; i++) {
-      jQuery("#preview, #shdw").show();
-      pixGrid.data.file = files[i];
-      reader = new FileReader();
-      reader.onloadend = onFileLoaded;
-      reader.readAsDataURL(pixGrid.data.file);
-      break;
+    if(!!window.FileReader && Modernizr.draganddrop){
+      event.stopPropagation();
+      event.preventDefault();
+      
+      var data = event.dataTransfer;
+      var files = data.files;
+      var reader;
+      
+      for(var i = 0; i < files.length; i++) {
+        jQuery("#preview, #shdw").show();
+        pixGrid.data.file = files[i];
+        reader = new FileReader();
+        reader.onloadend = onFileLoaded;
+        reader.readAsDataURL(pixGrid.data.file);
+        break;
+      }
+    }else{
+      // safari
     }
   }
 
   function onFileLoaded(event) {
-
     var pimg = document.getElementById("pv-img");
     pimg.src = event.currentTarget.result;
     pixGrid.data.src = event.currentTarget.result;
@@ -119,16 +122,17 @@ $(function(){
       }
     });
   }
+
   $(function(){
-    if(!!FileReader && Modernizr.draganddrop){
-      // sexy drag and drop action
+    if(!!window.FileReader && Modernizr.draganddrop){
       var dropArea = $("body").get(0);
       dropArea.addEventListener("dragenter", dragEnter, false);
       dropArea.addEventListener("dragexit", dragExit, false);
       dropArea.addEventListener("dragover", dragOver, false);
       dropArea.addEventListener("drop", drop, false);
     }else{
-      $("#dropArea").html("<h3><span style='color:#1189fe;margin:10px;'>or</span> <span id='select-p' class='b-btn'>Choose photos to upload</span></h3>");
+      $("#dropArea h3").html("<span style='color:#1189fe;margin:10px;'></span><form action='/photos/create' method='post' enctype='multipart/form-data' style='display:inline;'><input type='file' name='photo' /><input type='submit' value='Submit' /></form>");
+
     }
     $("#fi").change(function (){
       var fileName = $(this).val();
@@ -240,17 +244,20 @@ $(function(){
     $('#photo-file').change(function(e){
       e.stopPropagation();
       e.preventDefault();
-      
-      var files = e.target.files;
-      var reader;
-      
-      for(var i = 0; i < files.length; i++) {
-        jQuery("#preview, #shdw").show();
-        pixGrid.data.file = files[i];
-        reader = new FileReader();
-        reader.onloadend = onFileLoaded;
-        reader.readAsDataURL(pixGrid.data.file);
-        break;
+      if(!!window.FileReader && Modernizr.draganddrop){
+        var files = e.target.files;
+        var reader;
+        
+        for(var i = 0; i < files.length; i++) {
+          jQuery("#preview, #shdw").show();
+          pixGrid.data.file = files[i];
+          reader = new FileReader();
+          reader.onloadend = onFileLoaded;
+          reader.readAsDataURL(pixGrid.data.file);
+          break;
+        }
+      }else{
+        // safari
       }
     });
   });
