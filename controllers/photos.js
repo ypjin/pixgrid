@@ -82,8 +82,9 @@ function _create_json(req, res) {
   req.session.check(req, res, function(){
     req.session.controller = "photos";
     var data = {};
+    var tmp_base64 = Math.random().toString(36).substring(7);
     fs.readFile(req.files.photo.path, 'utf8', function (err, data) {
-      require("fs").writeFile("tmp_base64", data, function(err) {
+      require("fs").writeFile(tmp_base64, data, function(err) {
       });
       var base64Data = data.replace(/^data:image\/png;base64,/,"").replace(/^data:image\/jpeg;base64,/,"").replace(/^data:image\/jpg;base64,/,"").replace(/^data:image\/gif;base64,/,"");
       var dataBuffer = new Buffer(base64Data, 'base64');
@@ -94,6 +95,9 @@ function _create_json(req, res) {
           tags: req.body.tags
         };
         ACS.Photos.create(data, function(e) {
+          fs.unlink(tmp_base64, function (err) {
+            if (err) throw err;
+          });
           if(e.success && e.success === true){
             logger.info('photos#create.json: ' + JSON.stringify(e));
             res.send(e);
