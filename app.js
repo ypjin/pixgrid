@@ -5,7 +5,7 @@ var ACS = require('acs').ACS,
 
 // initialize app (setup ACS library and logger)
 function start(app) {
-  ACS.init('3XUnNvMwsfUm8zoqI3UDiqvpQA9qR9i0', 'VkbfjHJcQLJz5cE9X5MwGsFx1P0jraEA');
+  ACS.init('OAUTH_KEY', 'OAUTH_SECRET_KEY');
   logger.setLevel('DEBUG');
   
   //use connect.session

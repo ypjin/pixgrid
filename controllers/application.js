@@ -56,3 +56,7 @@ function signup(req, res) {
     res.redirect('/');
   }
 }
+
+function page_not_found(req, res){
+  res.send("page not found.");
+}

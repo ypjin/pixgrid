@@ -7,14 +7,14 @@
   "logfile" : "pixgrid.log",
   "keywords": [
   ],
-  "author": "peter l",
+  "author": "ACS",
   "maintainers": [
   ],
   "contributors": [
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ins429/pixgrid"
+    "url": ""
   },
   "preferGlobal": false,
   "dependencies": {

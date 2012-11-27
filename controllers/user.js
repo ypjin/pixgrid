@@ -47,7 +47,6 @@ function profile(req, res) {
       req.session.flash = {msg:e.message, r:0};
       res.redirect('/');
     }
-    console.log("e:::"+JSON.stringify(e));
   }, req, res);
 }
 

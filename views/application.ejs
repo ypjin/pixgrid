@@ -60,7 +60,7 @@
       if($("#flash").length > 0){
         setTimeout(function(){$("#flash").fadeOut()},3000);
       }
-      <% if(req && req.params.flash ){ %>$("input[name='un']").focus();<% } %>
+      <% if(req && req.params && req.params.flash ){ %>$("input[name='un']").focus();<% } %>
     });
   </script>
   <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

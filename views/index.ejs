@@ -68,25 +68,21 @@ $(function(){
 </script>
 <script type="text/javascript">
   function dragEnter(event) {
-    // console.log('dragEnter', event);
     event.stopPropagation();
     event.preventDefault();
   }
 
   function dragExit(event) {
-    // console.log('dragExit', event);
     event.stopPropagation();
     event.preventDefault();
   }
 
   function dragOver(event) {
-    // console.log('dragOver', event);
     event.stopPropagation();
     event.preventDefault();
   }
 
   function drop(event) {
-    // console.log('drop', event);
     if(!!window.FileReader && Modernizr.draganddrop){
       event.stopPropagation();
       event.preventDefault();
